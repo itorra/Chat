@@ -6,19 +6,22 @@ import java.net.*;
 /**
  * Created by ido on 10/05/15.
  */
-public class ClientProxy extends Thread implements StringConsumer, StringProducer {
+public class ConnectionProxy extends Thread implements StringConsumer, StringProducer {
 
     public static String serverName = "http://localhost/";
     public static int serverPort = 3000;
 
     private Socket socket;
 
-    InputStream is = null;
-    DataInputStream dis = null;
-    OutputStream os = null;
-    DataOutputStream dos = null;
+    private InputStream is = null;
+    private DataInputStream dis = null;
+    private OutputStream os = null;
+    private DataOutputStream dos = null;
 
-    public ClientProxy() {
+    private StringConsumer invoker;
+
+    public ConnectionProxy(StringConsumer in) {
+        invoker = in;
         try  {
             socket = new Socket(serverName,serverPort);
             is = socket.getInputStream();
@@ -56,16 +59,23 @@ public class ClientProxy extends Thread implements StringConsumer, StringProduce
 
     }
 
+
+
     @Override
     public void run() {
-        while (true){
-            try {
-                dis.readUTF();
-                // Send to the GUI  - How?
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        while (true){
+//            try {
+//                dis.readUTF();
+//                // Send to the GUI  - How?
+//                invoker.consume(dis.??);
+//
+//                this.getClass();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
+        invoker.consume("blabla");
     }
 
     @Override

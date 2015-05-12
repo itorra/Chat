@@ -1,7 +1,6 @@
 package com.chat;
 
 import javax.swing.*;
-import javax.swing.text.StringContent;
 import java.awt.*;
 
 /**
@@ -38,7 +37,7 @@ public class ClientGui implements StringConsumer {
     private final String nickNameLabelStr = "Nickname:";
 
 
-    private ClientProxy proxy;
+    private ConnectionProxy proxy;
 
 
     public ClientGui() {
@@ -56,7 +55,7 @@ public class ClientGui implements StringConsumer {
         northPanel = new JPanel();
         southPanel = new JPanel();
 
-        proxy = new ClientProxy();
+        proxy = new ConnectionProxy(this);
     }
 
     public void initGui() {
