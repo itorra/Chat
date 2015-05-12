@@ -3,8 +3,10 @@ package com.chat;
 import javax.swing.*;
 import java.awt.*;
 
+/*I am a test comment*/
+
 /**
- * Created by ido on 08/05/15.
+ * Created by Ido and Dassi on 08/05/15.
  */
 public class ClientGui implements StringConsumer {
 
