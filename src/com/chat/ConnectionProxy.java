@@ -63,19 +63,16 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
 
     @Override
     public void run() {
-//        while (true){
-//            try {
-//                dis.readUTF();
-//                // Send to the GUI  - How?
-//                invoker.consume(dis.??);
-//
-//                this.getClass();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        while (true){
+            try {
+                dis.readUTF();
+                invoker.consume(dis.);
 
-        invoker.consume("blabla");
+                this.getClass();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
