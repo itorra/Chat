@@ -9,19 +9,24 @@ import java.util.*;
 public class MessageBoard extends Thread implements StringConsumer, StringProducer {
 
 //    private List<ClientDescriptor> connectedClients;
-    private Vector<Message> msgQ;
+    private Queue<Message> msgQ;
     private Vector<StringConsumer> consumers;
 
     public MessageBoard() {
 
-        msgQ = new Vector<Message>();
+        msgQ = new LinkedList<Message>();
 //        connectedClients = new LinkedList<ClientDescriptor>();
     }
 
     @Override
     public void run() {
         while (true) {
-            if (msgQ.)
+            if (!msgQ.isEmpty()) {
+                Message distribute = msgQ.remove();
+                for (StringConsumer consumer: consumers) {
+                    consumer.consume(distribute.getMsg());
+                }
+            }
 
         }
     }
