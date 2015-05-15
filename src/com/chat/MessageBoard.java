@@ -16,6 +16,7 @@ public class MessageBoard extends Thread implements StringConsumer, StringProduc
 
         msgQ = new LinkedList<Message>();
 //        connectedClients = new LinkedList<ClientDescriptor>();
+        consumers = new Vector<StringConsumer>();
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.chat;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /*I am a test comment*/
 
@@ -12,7 +14,7 @@ public class ClientGui implements StringConsumer {
 
     @Override
     public void consume(String str) {
-        // I got a string from the proxy - now I need to show it on main chat window
+        chatOutput.append(str);
     }
 
     private JTextField nickName;
@@ -29,14 +31,15 @@ public class ClientGui implements StringConsumer {
     private JFrame mainFrame;
 
 
-    private final int nickNameLength = 10;
-    private final int userIOWidthLength = 50;
-    private final int userIOHeightLength = 100;
-    private final String welcomeMsg = "Connection Succeeded - Welcome ";
-    private final String connectLabel = "Connect";
-    private final String sendLabel = "Send!";
-    private final String windowLabel = "Chat Window";
-    private final String nickNameLabelStr = "Nickname:";
+
+    private final static int nickNameLength = 10;
+    private final static int userIOWidthLength = 50;
+    private final static int userIOHeightLength = 100;
+    private final static String welcomeMsg = "Connection Succeeded - Welcome ";
+    private final static String connectLabel = "Connect";
+    private final static String sendLabel = "Send!";
+    private final static String windowLabel = "Chat Window";
+    private final static String nickNameLabelStr = "Nickname:";
 
 
     private ConnectionProxy proxy;
@@ -57,7 +60,8 @@ public class ClientGui implements StringConsumer {
         northPanel = new JPanel();
         southPanel = new JPanel();
 
-        proxy = new ConnectionProxy(this);
+        proxy = new ConnectionProxy();
+        proxy.addConsumer(this);
     }
 
     public void initGui() {
@@ -94,9 +98,19 @@ public class ClientGui implements StringConsumer {
         gui.initGui();
         gui.start();
     }
+
+    public class chatListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String msg;
+            if (e.getSource() == connect)
+                msg = nickName.getText();
+            else
+                msg =userInput.getText();
+            proxy.consume(msg);
+        }
+    }
+
 }
 
 // TODO: make text area ScrollPage
-// I want ot know When I connected If I'm welcomed or not
-//so server will have a flag if I am aloowed to get data
-// This is just the connection -first Freeze bottom layer and when welcomed I'll be able to chat

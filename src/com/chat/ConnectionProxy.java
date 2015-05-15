@@ -25,8 +25,7 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
         initStreams();
     }
 
-    public ConnectionProxy(StringConsumer in) {
-        consumer = in;
+    public ConnectionProxy() {
         try {
             socket = new Socket(serverName,serverPort);
         } catch (IOException e) { e.printStackTrace(); }
