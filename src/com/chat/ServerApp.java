@@ -1,19 +1,53 @@
 package com.chat;
 
+import java.io.IOException;
+import java.net.*;
+import java.util.Vector;
+
 /**
  * Created by ido on 13/05/15.
  */
-public class ServerApp {
+public class ServerApp extends Thread {
 
-    private ConnectionProxy proxy;
     private MessageBoard mb;
+    private Vector<StringConsumer> consumers;
+
+    private ServerSocket server = null;
+    private Socket socket = null;
+    private ConnectionProxy newClientProxy = null;
+    private ClientDescriptor newClient = null;
 
     public ServerApp() {
 
+        mb = new MessageBoard();
+        try {
+            server = new ServerSocket(3000,5);
+        } catch (IOException e) { e.printStackTrace(); }
 
 
     }
 
+    @Override
+    public void run() {
 
+        while (true) {
+            try {
+                socket = server.accept();
+                newClientProxy = new ConnectionProxy(socket);
+                newClient = new ClientDescriptor();
+
+                mb.addConsumer(newClientProxy);
+                /* Connect between client descriptor to Proxy */
+                newClientProxy.addConsumer(newClient);
+                newClient.addConsumer(mb);
+
+                newClientProxy.start();
+
+            } catch (IOException e) { e.printStackTrace(); }
+
+
+        }
+
+    }
 
 }

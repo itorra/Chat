@@ -20,10 +20,26 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
 
     private StringConsumer invoker;
 
+    public ConnectionProxy(Socket s) {
+        socket = s;
+        initStreams();
+    }
+
+    public void setInvoker(StringConsumer invoker) {
+        this.invoker = invoker;
+    }
+
     public ConnectionProxy(StringConsumer in) {
         invoker = in;
-        try  {
+        try {
             socket = new Socket(serverName,serverPort);
+        } catch (IOException e) { e.printStackTrace(); }
+        initStreams();
+
+    }
+
+    public void initStreams() {
+        try  {
             is = socket.getInputStream();
             dis = new DataInputStream(is);
             os = socket.getOutputStream();
@@ -56,10 +72,7 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
                 try{socket.close();}catch(IOException e){e.printStackTrace();}
             }
         } //finally
-
     }
-
-
 
     @Override
     public void run() {
@@ -67,8 +80,6 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
             try {
                 dis.readUTF();
                 invoker.consume(dis.);
-
-                this.getClass();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -86,7 +97,7 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
 
     @Override
     public void addConsumer(StringConsumer sc) {
-
+        invoker = sc;
     }
 
     @Override
