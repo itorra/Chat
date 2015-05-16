@@ -50,4 +50,9 @@ public class ServerApp extends Thread {
 
     }
 
+    public static void main(String[] args) {
+        ServerApp app = new ServerApp();
+        app.start();
+    }
+
 }

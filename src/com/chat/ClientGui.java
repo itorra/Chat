@@ -105,7 +105,6 @@ public class ClientGui implements StringConsumer, ActionListener{
         }
         else if(evt.getSource() == send){
             String msg = userInput.getText();
-
         }
     }
 
