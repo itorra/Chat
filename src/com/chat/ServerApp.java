@@ -21,7 +21,7 @@ public class ServerApp extends Thread {
 
         mb = new MessageBoard();
         try {
-            server = new ServerSocket(3000,0);
+            server = new ServerSocket(3000,3000);
         } catch (IOException e) {
             System.out.println("Sever Failed");
             e.printStackTrace(); }

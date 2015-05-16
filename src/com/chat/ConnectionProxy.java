@@ -48,21 +48,25 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
         catch(IOException eio)
         {
             eio.printStackTrace();
-            if(is!=null) {
-                try{is.close();}catch(IOException e){e.printStackTrace();}
-            }
-            if(os!=null) {
-                try{os.close();}catch(IOException e){e.printStackTrace();}
-            }
-            if(dis!=null) {
-                try{dis.close();}catch(IOException e){e.printStackTrace();}
-            }
-            if(dos!=null) {
-                try{dos.close();}catch(IOException e){e.printStackTrace();}
-            }
-            if(socket!=null) {
-                try{socket.close();}catch(IOException e){e.printStackTrace();}
-            }
+            destroyStreams();
+        }
+    }
+
+    public void destroyStreams() {
+        if(is!=null) {
+            try{is.close();}catch(IOException e){e.printStackTrace();}
+        }
+        if(os!=null) {
+            try{os.close();}catch(IOException e){e.printStackTrace();}
+        }
+        if(dis!=null) {
+            try{dis.close();}catch(IOException e){e.printStackTrace();}
+        }
+        if(dos!=null) {
+            try{dos.close();}catch(IOException e){e.printStackTrace();}
+        }
+        if(socket!=null) {
+            try{socket.close();}catch(IOException e){e.printStackTrace();}
         }
     }
 
@@ -76,6 +80,7 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
             } catch (IOException e) {
                 System.out.println("Error....");
                 e.printStackTrace();
+                destroyStreams();
             }
         }
     }
