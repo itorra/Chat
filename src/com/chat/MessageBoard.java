@@ -23,7 +23,7 @@ public class MessageBoard extends Thread implements StringConsumer, StringProduc
 //            System.out.println("Checking Q");
             try { Thread.sleep(100); } catch (InterruptedException e) {}
             if (msgQ.size() > 0) {
-                System.out.println("MsgQQ isnot Empty");
+                System.out.println("MsgQ is not Empty");
                 Message distribute = msgQ.remove();
                 for (StringConsumer consumer: consumers) {
                     consumer.consume(distribute.getMsg());

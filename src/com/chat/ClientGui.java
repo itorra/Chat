@@ -3,8 +3,7 @@ package com.chat;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
-/*I am a test comment*/
+import java.awt.font.*;
 
 /**
  * Created by Ido and Dassi on 08/05/15.
@@ -41,7 +40,6 @@ public class ClientGui implements StringConsumer, ActionListener{
 
 
     private ConnectionProxy proxy = null;
-    private boolean isConnected = false;
 
 
     public ClientGui() {
@@ -88,10 +86,10 @@ public class ClientGui implements StringConsumer, ActionListener{
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
-                }
-            });
+            }
+        });
 
-        mainFrame.setSize(1000,800);
+        mainFrame.setSize(1000, 800);
     }
 
     public void start() {
@@ -102,18 +100,13 @@ public class ClientGui implements StringConsumer, ActionListener{
     @Override
     public void actionPerformed(ActionEvent evt) {
         if(evt.getSource() == connect) {
-            if(isConnected == false){
                 nickName.setEditable(false);
                 connect.setEnabled(false);
                 proxy = new ConnectionProxy(this);
                 proxy.start();
                 proxy.consume(nickName.getText());
-                isConnected = true;
                 send.setEnabled(true);
                 userInput.setEditable(true);
-            } else if(isConnected == true){
-                chatOutput.append("You are already connected...");
-            }
         }
         else if(evt.getSource() == send){
             proxy.consume(userInput.getText());
