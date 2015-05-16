@@ -13,7 +13,7 @@ public class ClientGui implements StringConsumer, ActionListener{
 
     @Override
     public void consume(String str) {
-        chatOutput.append(str);
+        chatOutput.append(str + '\n');
     }
 
     private JTextField nickName;
@@ -33,14 +33,14 @@ public class ClientGui implements StringConsumer, ActionListener{
     private final int nickNameLength = 10;
     private final int userIOWidthLength = 50;
     private final int userIOHeightLength = 100;
-    private final String welcomeMsg = "Connection Succeeded - Welcome ";
+    private final String welcomeMsg = "Connection Succeeded - Welcome\n";
     private final String connectLabel = "Connect";
     private final String sendLabel = "Send!";
     private final String windowLabel = "Chat Window";
     private final String nickNameLabelStr = "Nickname:";
 
 
-    private ConnectionProxy proxy;
+    private ConnectionProxy proxy = null;
     private boolean isConnected = false;
 
 
@@ -66,11 +66,9 @@ public class ClientGui implements StringConsumer, ActionListener{
         southPanel.setLayout(new FlowLayout());
         userInput.setEditable(false);
         send.setEnabled(false);
-        send.addActionListener(this);
         northPanel.add(nickNameLabel);
         northPanel.add(nickName);
         northPanel.add(connect);
-        connect.addActionListener(this);
 
         southPanel.add(userInput);
         southPanel.add(send);
@@ -80,16 +78,20 @@ public class ClientGui implements StringConsumer, ActionListener{
         chatOutput.setEditable(false);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.add(BorderLayout.NORTH, northPanel);
-        mainFrame.add(BorderLayout.SOUTH,southPanel);
-        mainFrame.add(BorderLayout.CENTER,chatOutput);
+        mainFrame.add(BorderLayout.SOUTH, southPanel);
+        mainFrame.add(BorderLayout.CENTER, chatOutput);
         //mainFrame.add(BorderLayout.WEST,userSelectorList);
-        mainFrame.setSize(1000,800);
+
+        send.addActionListener(this);
+        connect.addActionListener(this);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 System.exit(0);
-            }
-        });
+                }
+            });
+
+        mainFrame.setSize(1000,800);
     }
 
     public void start() {
@@ -101,20 +103,21 @@ public class ClientGui implements StringConsumer, ActionListener{
     public void actionPerformed(ActionEvent evt) {
         if(evt.getSource() == connect) {
             if(isConnected == false){
-                String name = nickName.getText();
                 nickName.setEditable(false);
+                connect.setEnabled(false);
                 proxy = new ConnectionProxy(this);
                 proxy.start();
-                proxy.consume(name);
+                proxy.consume(nickName.getText());
                 isConnected = true;
-            }
-            else if(isConnected == true){
+                send.setEnabled(true);
+                userInput.setEditable(true);
+            } else if(isConnected == true){
                 chatOutput.append("You are already connected...");
             }
         }
         else if(evt.getSource() == send){
-            String msg = userInput.getText();
-            proxy.consume(msg);
+            proxy.consume(userInput.getText());
+            userInput.setText("");
         }
     }
 
@@ -123,8 +126,3 @@ public class ClientGui implements StringConsumer, ActionListener{
         gui.start();
     }
 }
-
-// TODO: make text area ScrollPage
-// I want ot know When I connected If I'm welcomed or not
-//so server will have a flag if I am aloowed to get data
-// This is just the connection -first Freeze bottom layer and when welcomed I'll be able to chat

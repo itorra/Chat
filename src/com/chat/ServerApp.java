@@ -21,15 +21,17 @@ public class ServerApp extends Thread {
 
         mb = new MessageBoard();
         try {
-            server = new ServerSocket(3000,5);
-        } catch (IOException e) { e.printStackTrace(); }
+            server = new ServerSocket(3000,0);
+        } catch (IOException e) {
+            System.out.println("Sever Failed");
+            e.printStackTrace(); }
 
 
     }
 
     @Override
     public void run() {
-
+        mb.start();
         while (true) {
             try {
                 socket = server.accept();
@@ -43,11 +45,10 @@ public class ServerApp extends Thread {
 
                 newClientProxy.start();
 
-            } catch (IOException e) { e.printStackTrace(); }
-
-
+            } catch (IOException e) {
+                System.out.println("Main Error");
+                e.printStackTrace(); }
         }
-
     }
 
     public static void main(String[] args) {

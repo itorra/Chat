@@ -8,7 +8,7 @@ import java.net.*;
  */
 public class ConnectionProxy extends Thread implements StringConsumer, StringProducer {
 
-    public static String serverName = "127.0.0.1";
+    public static String serverName = "localhost";
     public static int serverPort = 3000;
 
     private Socket socket;
@@ -23,15 +23,19 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
     public ConnectionProxy(Socket s) {
         socket = s;
         initStreams();
+        System.out.println("Connection Proxy Created");
     }
 
     public ConnectionProxy(StringConsumer in) {
         consumer = in;
         try {
             socket = new Socket(serverName,serverPort);
-        } catch (IOException e) { e.printStackTrace(); }
-        initStreams();
-
+            initStreams();
+            System.out.println("Connection Proxy Created");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(0);
+        }
     }
 
     public void initStreams() {
@@ -41,33 +45,25 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
             os = socket.getOutputStream();
             dos = new DataOutputStream(os);
         }
-        catch(IOException e)
+        catch(IOException eio)
         {
-            e.printStackTrace();
-        }
-        finally
-        {
-            if(is!=null)
-            {
+            eio.printStackTrace();
+            if(is!=null) {
                 try{is.close();}catch(IOException e){e.printStackTrace();}
             }
-            if(os!=null)
-            {
+            if(os!=null) {
                 try{os.close();}catch(IOException e){e.printStackTrace();}
             }
-            if(dis!=null)
-            {
+            if(dis!=null) {
                 try{dis.close();}catch(IOException e){e.printStackTrace();}
             }
-            if(dos!=null)
-            {
+            if(dos!=null) {
                 try{dos.close();}catch(IOException e){e.printStackTrace();}
             }
-            if(socket!=null)
-            {
+            if(socket!=null) {
                 try{socket.close();}catch(IOException e){e.printStackTrace();}
             }
-        } //finally
+        }
     }
 
     @Override
@@ -76,7 +72,9 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
             try {
                 String msg = dis.readUTF();
                 consumer.consume(msg);
+                System.out.println(msg);
             } catch (IOException e) {
+                System.out.println("Error....");
                 e.printStackTrace();
             }
         }
