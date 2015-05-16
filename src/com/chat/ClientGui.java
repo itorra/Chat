@@ -19,8 +19,8 @@ public class ClientGui implements StringConsumer, ActionListener{
     private JTextField userInput;
     private JTextArea chatOutput;
     private JButton connect;
+    private JButton disconnect;
     private JButton send;
-
     private JLabel nickNameLabel;
     //private JList userSelectorList;
     private JPanel northPanel;
@@ -34,9 +34,13 @@ public class ClientGui implements StringConsumer, ActionListener{
     private final int userIOHeightLength = 100;
     private final String welcomeMsg = "Connection Succeeded - Welcome\n";
     private final String connectLabel = "Connect";
-    private final String sendLabel = "Send!";
+    private final String disconnectLabel = "Disconnect";
+    private final String sendLabel = "Send";
     private final String windowLabel = "Chat Window";
     private final String nickNameLabelStr = "Nickname:";
+    private final String connectionMsg = "#ADD";
+    private final String disconnectMsg = "#REMOVE";
+    private final String sentMsg = "#SENT:";
 
 
     private ConnectionProxy proxy = null;
@@ -47,6 +51,7 @@ public class ClientGui implements StringConsumer, ActionListener{
         userInput = new JTextField(userIOWidthLength);
         chatOutput = new JTextArea(welcomeMsg,userIOHeightLength,userIOWidthLength);
         connect = new JButton(connectLabel);
+        disconnect = new JButton(disconnectLabel);
         send = new JButton(sendLabel);
         mainFrame = new JFrame(windowLabel);
         //userSelectorList = new JList();
@@ -64,9 +69,11 @@ public class ClientGui implements StringConsumer, ActionListener{
         southPanel.setLayout(new FlowLayout());
         userInput.setEditable(false);
         send.setEnabled(false);
+        disconnect.setEnabled(false);
         northPanel.add(nickNameLabel);
         northPanel.add(nickName);
         northPanel.add(connect);
+        northPanel.add(disconnect);
 
         southPanel.add(userInput);
         southPanel.add(send);
@@ -82,6 +89,7 @@ public class ClientGui implements StringConsumer, ActionListener{
 
         send.addActionListener(this);
         connect.addActionListener(this);
+        disconnect.addActionListener(this);
         mainFrame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -99,17 +107,28 @@ public class ClientGui implements StringConsumer, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent evt) {
-        if(evt.getSource() == connect) {
-                nickName.setEditable(false);
-                connect.setEnabled(false);
-                proxy = new ConnectionProxy(this);
-                proxy.start();
-                proxy.consume(nickName.getText());
-                send.setEnabled(true);
-                userInput.setEditable(true);
+        Object eventSource = evt.getSource();
+        if(eventSource == connect) {
+            nickName.setEditable(false);
+            connect.setEnabled(false);
+            disconnect.setEnabled(true);
+            proxy.consume(nickName.getText());
+            send.setEnabled(true);
+            userInput.setEditable(true);
+
+            proxy = new ConnectionProxy(this);
+            proxy.start();
+            proxy.consume(connectionMsg);
         }
-        else if(evt.getSource() == send){
-            proxy.consume(userInput.getText());
+        else if(eventSource == disconnect){
+            nickName.setEditable(true);
+            connect.setEnabled(true);
+            send.setEnabled(false);
+            userInput.setEditable(false);
+            proxy.consume(disconnectMsg);
+        }
+        else if(eventSource == send){
+            proxy.consume(sentMsg + userInput.getText());
             userInput.setText("");
         }
     }
