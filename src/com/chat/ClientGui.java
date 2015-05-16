@@ -13,7 +13,7 @@ public class ClientGui implements StringConsumer, ActionListener{
 
     @Override
     public void consume(String str) {
-        // I got a string from the proxy - now I need to show it on main chat window
+        chatOutput.append(str);
     }
 
     private JTextField nickName;
@@ -66,9 +66,11 @@ public class ClientGui implements StringConsumer, ActionListener{
         southPanel.setLayout(new FlowLayout());
         userInput.setEditable(false);
         send.setEnabled(false);
+        send.addActionListener(this);
         northPanel.add(nickNameLabel);
         northPanel.add(nickName);
         northPanel.add(connect);
+        connect.addActionListener(this);
 
         southPanel.add(userInput);
         southPanel.add(send);
@@ -82,6 +84,12 @@ public class ClientGui implements StringConsumer, ActionListener{
         mainFrame.add(BorderLayout.CENTER,chatOutput);
         //mainFrame.add(BorderLayout.WEST,userSelectorList);
         mainFrame.setSize(1000,800);
+        mainFrame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     public void start() {
@@ -97,6 +105,7 @@ public class ClientGui implements StringConsumer, ActionListener{
                 nickName.setEditable(false);
                 proxy = new ConnectionProxy(this);
                 proxy.start();
+                proxy.consume(name);
                 isConnected = true;
             }
             else if(isConnected == true){
@@ -105,7 +114,7 @@ public class ClientGui implements StringConsumer, ActionListener{
         }
         else if(evt.getSource() == send){
             String msg = userInput.getText();
-
+            proxy.consume(msg);
         }
     }
 
