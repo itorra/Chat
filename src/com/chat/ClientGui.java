@@ -2,13 +2,14 @@ package com.chat;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 /*I am a test comment*/
 
 /**
  * Created by Ido and Dassi on 08/05/15.
  */
-public class ClientGui implements StringConsumer {
+public class ClientGui implements StringConsumer, ActionListener{
 
     @Override
     public void consume(String str) {
@@ -22,7 +23,7 @@ public class ClientGui implements StringConsumer {
     private JButton send;
 
     private JLabel nickNameLabel;
-    private JList userSelectorList;
+    //private JList userSelectorList;
     private JPanel northPanel;
     private JPanel southPanel;
     private JPanel eastPanel;
@@ -40,6 +41,7 @@ public class ClientGui implements StringConsumer {
 
 
     private ConnectionProxy proxy;
+    private boolean isConnected = false;
 
 
     public ClientGui() {
@@ -49,15 +51,13 @@ public class ClientGui implements StringConsumer {
         connect = new JButton(connectLabel);
         send = new JButton(sendLabel);
         mainFrame = new JFrame(windowLabel);
-        userSelectorList = new JList();
+        //userSelectorList = new JList();
 
         nickNameLabel = new JLabel(nickNameLabelStr);
 
         eastPanel = new JPanel();
         northPanel = new JPanel();
         southPanel = new JPanel();
-
-        proxy = new ConnectionProxy(this);
     }
 
     public void initGui() {
@@ -73,25 +73,44 @@ public class ClientGui implements StringConsumer {
         southPanel.add(userInput);
         southPanel.add(send);
 
-        eastPanel.add(userSelectorList);
+        //eastPanel.add(userSelectorList);
         chatOutput.setHighlighter(null);
         chatOutput.setEditable(false);
         mainFrame.setLayout(new BorderLayout());
         mainFrame.add(BorderLayout.NORTH, northPanel);
         mainFrame.add(BorderLayout.SOUTH,southPanel);
         mainFrame.add(BorderLayout.CENTER,chatOutput);
-        mainFrame.add(BorderLayout.WEST,userSelectorList);
+        //mainFrame.add(BorderLayout.WEST,userSelectorList);
         mainFrame.setSize(1000,800);
     }
 
     public void start() {
+        initGui();
         mainFrame.setVisible(true);
-        proxy.start();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent evt) {
+        if(evt.getSource() == connect) {
+            if(isConnected == false){
+                String name = nickName.getText();
+                nickName.setEditable(false);
+                proxy = new ConnectionProxy(this);
+                proxy.start();
+                isConnected = true;
+            }
+            else if(isConnected == true){
+                chatOutput.append("You are already connected...");
+            }
+        }
+        else if(evt.getSource() == send){
+            String msg = userInput.getText();
+
+        }
     }
 
     public static void main(String[] args) {
         ClientGui gui = new ClientGui();
-        gui.initGui();
         gui.start();
     }
 }

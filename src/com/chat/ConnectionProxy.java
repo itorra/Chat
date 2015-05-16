@@ -8,7 +8,7 @@ import java.net.*;
  */
 public class ConnectionProxy extends Thread implements StringConsumer, StringProducer {
 
-    public static String serverName = "http://localhost/";
+    public static String serverName = "127.0.0.1";
     public static int serverPort = 3000;
 
     private Socket socket;
