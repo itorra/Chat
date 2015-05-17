@@ -38,9 +38,10 @@ public class ClientGui implements StringConsumer, ActionListener{
     private final String sendLabel = "Send";
     private final String windowLabel = "Chat Window";
     private final String nickNameLabelStr = "Nickname:";
+
     private final String connectionMsg = "#ADD";
     private final String disconnectMsg = "#REMOVE";
-    private final String sentMsg = "#SENT:";
+    private final String sentMsg = "#SENT";
 
 
     private ConnectionProxy proxy = null;
@@ -112,13 +113,14 @@ public class ClientGui implements StringConsumer, ActionListener{
             nickName.setEditable(false);
             connect.setEnabled(false);
             disconnect.setEnabled(true);
-            proxy.consume(nickName.getText());
+
             send.setEnabled(true);
             userInput.setEditable(true);
 
             proxy = new ConnectionProxy(this);
             proxy.start();
-            proxy.consume(connectionMsg);
+            proxy.consume(nickName.getText());
+//            proxy.consume(connectionMsg);
         }
         else if(eventSource == disconnect){
             nickName.setEditable(true);
@@ -128,7 +130,7 @@ public class ClientGui implements StringConsumer, ActionListener{
             proxy.consume(disconnectMsg);
         }
         else if(eventSource == send){
-            proxy.consume(sentMsg + userInput.getText());
+            proxy.consume(userInput.getText());
             userInput.setText("");
         }
     }

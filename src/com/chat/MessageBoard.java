@@ -46,6 +46,6 @@ public class MessageBoard extends Thread implements StringConsumer, StringProduc
 
     @Override
     public void removeConsumer(StringConsumer sc) {
-
+        consumers.remove(sc);
     }
 }

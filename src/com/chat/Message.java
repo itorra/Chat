@@ -13,11 +13,9 @@ public class Message {
     private String msg;
 
     public Message(String msg_src) {
-        System.out.println("new msg created " + msg_src);
         this.msg = msg_src;
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         msg = sdf.format(new Date()) + "   " + msg;
-        System.out.println("new msg created " + msg);
     }
 
     public String getMsg() {

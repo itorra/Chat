@@ -16,6 +16,12 @@ public class ClientDescriptor implements StringConsumer, StringProducer{
 
     @Override
     public void consume(String str) {
+        if (str == "#REMOVE") {
+            MessageBoard mb = (MessageBoard) invoker;
+            mb.removeConsumer(this);
+            invoker.consume(nickName + " has left the chat");
+        }
+
         invoker.consume( justConnected? newClientHandler(str):existingClientHandler(str) );
     }
 
@@ -30,6 +36,7 @@ public class ClientDescriptor implements StringConsumer, StringProducer{
     }
 
     public String existingClientHandler(String msg){
+
         return nickName + ":  " + msg ;
     }
 

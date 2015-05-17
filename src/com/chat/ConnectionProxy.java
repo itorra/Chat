@@ -72,7 +72,7 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
 
     @Override
     public void run() {
-        while (true){
+        while (socket.isConnected()){
             try {
                 String msg = dis.readUTF();
                 consumer.consume(msg);
@@ -80,9 +80,11 @@ public class ConnectionProxy extends Thread implements StringConsumer, StringPro
             } catch (IOException e) {
                 System.out.println("Error....");
                 e.printStackTrace();
-                destroyStreams();
+                break;
             }
         }
+        destroyStreams();
+        consumer.consume("Disconnected");
     }
 
     @Override
